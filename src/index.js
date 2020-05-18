@@ -2,6 +2,9 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 
+var $player1 ;
+var $player2;
+
 function Square(props) {
         return (
             <button className = "square" onClick=
@@ -10,6 +13,57 @@ function Square(props) {
             </button>
         );
 }
+
+class TodoApp extends React.Component {
+    constructor(props) {
+      super(props);
+      this.state = { items: [], text: '' };
+      this.handleChange = this.handleChange.bind(this);
+      this.handleSubmit = this.handleSubmit.bind(this);
+    }
+  
+    render() {
+      return (
+        <div>
+          <h3>Jogadores</h3>
+          <TodoList items={this.state.items} />
+          <form onSubmit={this.handleSubmit}>
+            <label htmlFor="new-todo">
+              digite o nome do jogador
+            </label>
+            <input
+              id="new-todo"
+              onChange={this.handleChange}
+              value={this.state.text}
+            />
+            <button>
+              Adicionar #{this.state.items.length + 1}
+            </button>
+          </form>
+        </div>
+      );
+    }
+    handleChange(e) {
+        this.setState({ text: e.target.value });
+      }
+    
+      handleSubmit(e) {
+        e.preventDefault();
+        if (this.state.text.length === 0) {
+          return;
+        }
+        const newItem = {
+          text: this.state.text,
+          id: Date.now()
+        };
+        this.setState(state => ({
+          items: state.items.concat(newItem),
+          text: ''
+        }));
+      }
+}
+
+/////////////////////////////////////////////////
 
 class Board extends React.Component {
     constructor(props){
@@ -24,11 +78,11 @@ class Board extends React.Component {
         if(calculateWinner(squares)|| squares[i]){
             return;
         }
-        squares[i]=this.state.xIsNext ? 'X':'O';
-        this.setState({
-            squares:squares,
-            xIsNext:!this.state.xIsNext,
-        });
+            squares[i]=this.state.xIsNext ? 'X':'O';
+            this.setState({
+                squares:squares,
+                xIsNext:!this.state.xIsNext,
+            });
     }
     renderSquare(i) {
         return <Square
@@ -41,7 +95,7 @@ class Board extends React.Component {
         calculateWinner(this.state.squares);
         let status;
         if(winner){
-            status='Vencedor: '+winner;
+            status='Vencedor: '+ winner;
         }else{
             status = 'Próximo Jogador: '+
            (this.state.xIsNext?'X':'O');
@@ -73,23 +127,50 @@ class Board extends React.Component {
 class Game extends React.Component {
     render() { 
         return ( 
+           
             <div className = "game">
-            <div className = "game-board" >
-            <Board />
+                 <div className = "player1">
+                   Jogador 'X': <span>{$player1}</span>
+                </div>
+                <div className = "player2">
+                   Jogador 'O': <span>{$player2}</span>
+                </div>
+                <div className = "game-board" >
+                       <Board />
+                </div>
+                 <div className = "game-info" >
+                    <div> { /* status */ } </div> 
+                     <ol> { /* TODO */ } </ol>
+                 </div >
             </div>
-            <div className = "game-info" >
-
-            <div> { /* status */ } </div> 
-            <ol> { /* TODO */ } </ol> </div > </div>
         );
     }
 }
 
+class TodoList extends React.Component {
+    render() {
+      return (
+        <ul>
+          {this.props.items.map(item => (
+            <li key={item.id}>{item.text}</li>
+          ))}
+        </ul>
+      );
+    }
+  }
+  
+
 // ========================================
 
 ReactDOM.render( < Game /> ,
-    document.getElementById('root')
+    document.getElementById('root'),
 );
+
+newFunction();
+
+function newFunction() {
+    ReactDOM.render(<TodoApp />, document.getElementById('example'));
+}
 
 function calculateWinner(squares) {
     const lines = [
