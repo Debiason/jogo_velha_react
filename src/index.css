@@ -31,6 +31,7 @@ body {
     margin-left: 20px;
     height: bold;
   }
+  /*
   .player1{
  font-style: italic;
   font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
@@ -55,7 +56,7 @@ body {
   height: 20px;
   box-shadow: 5px 5px;
   }
-  
+  */
   .square {
     background: #fff;
     border: 3px solid;

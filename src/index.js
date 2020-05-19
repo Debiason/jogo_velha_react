@@ -2,14 +2,12 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 
-var $player1 ;
-var $player2;
 
 function Square(props) {
         return (
             <button className = "square" onClick=
-            {props.onClick}> 
-                 {props.value} 
+              {props.onClick}> 
+              {props.value} 
             </button>
         );
 }
@@ -28,8 +26,9 @@ class TodoApp extends React.Component {
           <h3>Jogadores</h3>
           <TodoList items={this.state.items} />
           <form onSubmit={this.handleSubmit}>
+          <label htmlFor="new-todo"></label>
             <label htmlFor="new-todo">
-              digite o nome do jogador
+              Digite o nome do jogador
             </label>
             <input
               id="new-todo"
@@ -38,29 +37,31 @@ class TodoApp extends React.Component {
             />
             <button>
               Adicionar #{this.state.items.length + 1}
-            </button>
+            </button>    
           </form>
         </div>
       );
     }
     handleChange(e) {
-        this.setState({ text: e.target.value });
+      if (this.state.items.length < 2) {
+        this.setState({ text: e.target.value })
       }
-    
-      handleSubmit(e) {
-        e.preventDefault();
-        if (this.state.text.length === 0) {
-          return;
+    }
+        handleSubmit(e) {
+          e.preventDefault();
+          if (this.state.text.length === 0) {
+            return;
+          }
+         const player = {
+            text: this.state.text,
+            id: Date.now()
+          };
+          this.setState(state => ({
+            items: state.items.concat(player),
+            text: ''
+          }));
         }
-        const newItem = {
-          text: this.state.text,
-          id: Date.now()
-        };
-        this.setState(state => ({
-          items: state.items.concat(newItem),
-          text: ''
-        }));
-      }
+      
 }
 
 /////////////////////////////////////////////////
@@ -96,6 +97,7 @@ class Board extends React.Component {
         let status;
         if(winner){
             status='Vencedor: '+ winner;
+            { alert('Vencedor: '+ winner); }
         }else{
             status = 'Próximo Jogador: '+
            (this.state.xIsNext?'X':'O');
@@ -129,12 +131,6 @@ class Game extends React.Component {
         return ( 
            
             <div className = "game">
-                 <div className = "player1">
-                   Jogador 'X': <span>{$player1}</span>
-                </div>
-                <div className = "player2">
-                   Jogador 'O': <span>{$player2}</span>
-                </div>
                 <div className = "game-board" >
                        <Board />
                 </div>
@@ -146,20 +142,18 @@ class Game extends React.Component {
         );
     }
 }
-
-class TodoList extends React.Component {
+  class TodoList extends React.Component {
     render() {
-      return (
-        <ul>
-          {this.props.items.map(item => (
-            <li key={item.id}>{item.text}</li>
-          ))}
-        </ul>
-      );
+          return (
+            <ul>
+                  {this.props.items.map(item => (
+                  <li key={item.id}>{item.text}</li>            
+                  ))}
+            </ul>
+          );
+      }
+      
     }
-  }
-  
-
 // ========================================
 
 ReactDOM.render( < Game /> ,
